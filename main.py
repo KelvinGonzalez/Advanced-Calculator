@@ -34,7 +34,7 @@ while True:
                 variable = expression[:expression.index('=') - 1]
                 value = expression[expression.index('=') + 2:]
 
-                for key in list(variables.keys())[::-1]:
+                for key in variables.keys():
                     value = value.replace(key, variables[key])
 
                 value = str(eval(value))
@@ -62,7 +62,7 @@ while True:
                 variable = expression[:expression.index('=') - 1]
                 definition = expression[expression.index('=') + 2:]
 
-                for key in list(variables.keys())[::-1]:
+                for key in variables.keys():
                     definition = definition.replace(key, variables[key])
 
                 function = str(Function(definition))
@@ -120,7 +120,7 @@ while True:
         try:
             expression = answer
 
-            for key in list(variables.keys())[::-1]:
+            for key in variables.keys():
                 expression = expression.replace(key, variables[key])
 
             print(f"Result: {eval(expression)}")
