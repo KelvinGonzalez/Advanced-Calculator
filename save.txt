@@ -1,0 +1,1 @@
+{"x1": "3", "f1": "Function('8*x')", "f2": "Function('3 * 9 * x')", "v1": "Vector(9, 4, 2)", "v2": "Vector(8, 2, 1)"}
