@@ -1,3 +1,7 @@
+from math import *
+from vector import *
+
+
 class Function:
 
     def __init__(self, funct):

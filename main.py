@@ -2,6 +2,7 @@ from math import *
 from function import *
 from vector import *
 from conversion import *
+from physics import *
 import os
 import json
 
@@ -18,6 +19,7 @@ print(
     "[expression]\n"
     "var [x] = [y]\n"
     "funct [f] = [y]\n"
+    "physics [task] [variable]: [attribute_1] = [value_1], [attribute_n] = [value_n]\n"
     "delete [variable]\n"
     "exit\n"
     "-----------------------------"
@@ -26,7 +28,7 @@ print(
 while True:
     answer = input()
 
-    if answer[:4].lower() == "var ":
+    if answer[:4] == "var ":
         expression = answer[4:]
 
         if " = " in expression:
@@ -54,7 +56,7 @@ while True:
         else:
             print("Incorrect format, use x = y")
 
-    elif answer[:6].lower() == "funct ":
+    elif answer[:6] == "funct ":
         expression = answer[6:]
 
         if " = " in expression:
@@ -82,7 +84,76 @@ while True:
         else:
             print("Incorrect format, use f(x) = y")
 
-    elif answer[:7].lower() == "delete ":
+    elif answer[:8] == "physics ":
+        physicsExpression = answer[8:]
+
+        if physicsExpression[:7] == "object ":
+            object = physicsExpression[7:]
+
+            variables[object] = str(OneDimensionalPhysicsObject())
+
+            print(f"One Dimensional Physics Object created with name {object}")
+
+        elif physicsExpression[:7] == "modify ":
+            expression = physicsExpression[7:]
+
+            if ": " in expression and " = " in expression:
+                try:
+                    variable = expression[:expression.index(':')]
+                    assignments = expression[expression.index(':') + 2:].split(", ")
+                    obj = eval(variables[variable])
+
+                    for assignment in assignments:
+                        attribute = assignment[:assignment.index('=') - 1]
+                        value = assignment[assignment.index('=') + 2:]
+                        obj.modify(attribute, float(value))
+
+                        print(f"Object {variable} had its attribute {attribute} modified to {value}")
+
+                    variables[variable] = str(obj)
+
+                except:
+                    print("Object attributes could not be modified")
+
+            else:
+                print("Incorrect format, use x: y = z")
+
+        elif physicsExpression[:10] == "calculate ":
+            expression = physicsExpression[10:]
+
+            if ": " in expression:
+                try:
+                    variable = expression[:expression.index(':')]
+                    attributes = expression[expression.index(':') + 2:].split(", ")
+
+                    obj = eval(variables[variable])
+                    obj.calculate(attributes)
+                    variables[variable] = str(obj)
+
+                except:
+                    print("Object attributes could not be calculated")
+
+            else:
+                print("Incorrect format, use x: y")
+
+        elif physicsExpression[:6] == "clear ":
+            if ": " in physicsExpression:
+                variable = physicsExpression[6:physicsExpression.index(':')]
+                attributes = physicsExpression[physicsExpression.index(':') + 2:].split(", ")
+                obj = eval(variables[variable])
+
+                for attribute in attributes:
+                    obj.modify(attribute, None)
+
+                variables[variable] = str(obj)
+
+            else:
+                variable = physicsExpression[6:]
+                variables[variable] = str(OneDimensionalPhysicsObject())
+
+            print(f"Object {variable} has been cleared")
+
+    elif answer[:7] == "delete ":
         variable = answer[7:]
 
         if variables.get(variable):
@@ -91,29 +162,29 @@ while True:
         else:
             print(f"Variable {variable} not found")
 
-    elif answer.lower() == "variables":
+    elif answer == "variables":
         for x in variables.keys():
             print(f"{x}: {variables[x]}")
 
-    elif answer.lower() == "exit":
+    elif answer == "exit":
         save = open("save.txt", "w")
         save.write(json.dumps(variables))
         save.close()
 
         exit()
 
-    elif answer.lower() == "save":
+    elif answer == "save":
         save = open("save.txt", "w")
         save.write(json.dumps(variables))
         save.close()
 
         print("Data has been saved")
 
-    elif answer.lower() == "clear variables":
+    elif answer == "clear variables":
         variables.clear()
         print("All variable data has been cleared")
 
-    elif answer.lower().replace(" ", "") == "":
+    elif answer.replace(" ", "") == "":
         continue
 
     else:
