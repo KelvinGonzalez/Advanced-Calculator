@@ -8,6 +8,7 @@ class Function:
         self.funct = funct
 
     def __call__(self, *args):
+        # Evaluate the function on the given parameters
         x = None
 
         if len(args) == 1:
@@ -21,33 +22,42 @@ class Function:
         return f"Function('{self.funct}')"
 
     def __add__(self, other):
+        # Add functions
         return Function(f"{self.funct} + {other.funct}")
 
     def __sub__(self, other):
+        # Subtract functions
         return Function(f"{self.funct} - ({other.funct})")
 
     def __mul__(self, other):
+        # Multiply Functions
         return Function(f"({self.funct}) * ({other.funct})")
 
     def __truediv__(self, other):
+        # Divide Functions
         return Function(f"({self.funct}) / ({other.funct})")
 
     def composite(self, other):
+        # Return a function of a function
         return Function(self.funct.replace("x", f"({other.funct})"))
 
     @staticmethod
     def staticSlope(x1, y1, x2, y2):
+        # Find the slope with given coordinates
         return (y2 - y1) / (x2 - x1)
 
     def slope(self, x):
+        # Find the slope at the given point
         offset = 1e-5
         return Function.staticSlope(x - offset, self(x - offset), x + offset, self(x + offset))
 
     def slopeFunction(self, x):
+        # Create a function for the tangent line at the given point
         slope = self.slope(x)
         return Function(f"(x - {x}) * {slope} + {self(x)}")
 
     def integralLeft(self, a=0, b=1, n=100):
+        # Calculate integral using Left rule
         dx = (b - a) / n
         total = 0
 
@@ -57,6 +67,7 @@ class Function:
         return total
 
     def integralRight(self, a=0, b=1, n=100):
+        # Calculate integral using Right rule
         dx = (b - a) / n
         total = 0
 
@@ -66,6 +77,7 @@ class Function:
         return total
 
     def integralMidpoint(self, a=0, b=1, n=100):
+        # Calculate integral using Midpoint rule
         dx = (b - a) / n
         total = 0
 
@@ -75,6 +87,7 @@ class Function:
         return total
 
     def integralTrapezoidal(self, a=0, b=1, n=100):
+        # Calculate integral using Trapezoidal rule
         dx = (b - a) / n
         total = (dx / 2) * (self(a) + self(b))
 
@@ -84,6 +97,7 @@ class Function:
         return total
 
     def integralSimpson(self, a=0, b=1, n=100):
+        # Calculate integral using Simpson's rule
         if n % 2 == 1:
             return "Value of 'n' must be even"
 
@@ -99,9 +113,11 @@ class Function:
         return total
 
     def integralAll(self, a=0, b=1, n=100):
+        # Calculate integral using all rules
         return f"Left: {self.integralLeft(a, b, n)}\nRight: {self.integralRight(a, b, n)}\nMidpoint: {self.integralMidpoint(a, b, n)}\nTrapezoidal: {self.integralTrapezoidal(a, b, n)}\nSimpson: {self.integralSimpson(a, b, n)}"
 
     def series0(self, n=100):
+        # Calculate series starting from 0
         total = 0
 
         for i in range(0, n + 1):
@@ -110,6 +126,7 @@ class Function:
         return total
 
     def series1(self, n=100):
+        # Calculate series starting from 1
         total = 0
 
         for i in range(1, n + 1):

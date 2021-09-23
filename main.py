@@ -8,11 +8,13 @@ import json
 
 variables = {}
 
+# Load variable data
 if os.path.isfile("save.txt"):
     load = open("save.txt", "r")
     variables = json.loads(load.readline())
     load.close()
 
+# Print initial help data
 print(
     "-----------------------------\n"
     "Help:\n"
@@ -21,6 +23,7 @@ print(
     "funct [f] = [y]\n"
     "physics [task] [variable]: [attribute_1] = [value_1], [attribute_n] = [value_n]\n"
     "delete [variable]\n"
+    "save\n"
     "exit\n"
     "-----------------------------"
 )
@@ -29,6 +32,7 @@ while True:
     answer = input()
 
     if answer[:4] == "var ":
+        # Create and store a variable with the name and value that the user provides
         expression = answer[4:]
 
         if " = " in expression:
@@ -57,6 +61,7 @@ while True:
             print("Incorrect format, use x = y")
 
     elif answer[:6] == "funct ":
+        # Create and store a function with the name and definition that the user provides
         expression = answer[6:]
 
         if " = " in expression:
@@ -85,9 +90,11 @@ while True:
             print("Incorrect format, use f(x) = y")
 
     elif answer[:8] == "physics ":
+        # State that the user will be interacting with physics objects
         physicsExpression = answer[8:]
 
         if physicsExpression[:7] == "object ":
+            # Create and store a physics object with the name provided by the user
             object = physicsExpression[7:]
 
             variables[object] = str(OneDimensionalPhysicsObject())
@@ -95,6 +102,7 @@ while True:
             print(f"One Dimensional Physics Object created with name {object}")
 
         elif physicsExpression[:7] == "modify ":
+            # Modify the attributes of the object specified by the user
             expression = physicsExpression[7:]
 
             if ": " in expression and " = " in expression:
@@ -119,6 +127,7 @@ while True:
                 print("Incorrect format, use x: y = z")
 
         elif physicsExpression[:10] == "calculate ":
+            # Calculate the specified attribute for the object specified by the user
             expression = physicsExpression[10:]
 
             if ": " in expression:
@@ -137,6 +146,7 @@ while True:
                 print("Incorrect format, use x: y")
 
         elif physicsExpression[:6] == "clear ":
+            # Clear specific or all attribute data for a specified object
             if ": " in physicsExpression:
                 variable = physicsExpression[6:physicsExpression.index(':')]
                 attributes = physicsExpression[physicsExpression.index(':') + 2:].split(", ")
@@ -154,6 +164,7 @@ while True:
             print(f"Object {variable} has been cleared")
 
     elif answer[:7] == "delete ":
+        # Delete a specified stored variable
         variable = answer[7:]
 
         if variables.get(variable):
@@ -163,10 +174,12 @@ while True:
             print(f"Variable {variable} not found")
 
     elif answer == "variables":
+        # View all variables stored
         for x in variables.keys():
             print(f"{x}: {variables[x]}")
 
     elif answer == "exit":
+        # Save variable data and exit the program
         save = open("save.txt", "w")
         save.write(json.dumps(variables))
         save.close()
@@ -174,6 +187,7 @@ while True:
         exit()
 
     elif answer == "save":
+        # Save variable data
         save = open("save.txt", "w")
         save.write(json.dumps(variables))
         save.close()
@@ -181,13 +195,16 @@ while True:
         print("Data has been saved")
 
     elif answer == "clear variables":
+        # Clear all variables stored
         variables.clear()
         print("All variable data has been cleared")
 
     elif answer.replace(" ", "") == "":
+        # Allow the user to enter new lines freely
         continue
 
     else:
+        # Evaluate the user's input
         try:
             expression = answer
 

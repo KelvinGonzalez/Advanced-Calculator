@@ -15,6 +15,7 @@ class OneDimensionalPhysicsObject:
         return f"OneDimensionalPhysicsObject({self.initX}, {self.finalX}, {self.displacement}, {self.initVelocity}, {self.velocity}, {self.acceleration}, {self.time})"
 
     def modify(self, x, y):
+        # Modify the specified attribute to be the specified value
         if x == "initX":
             self.initX = y
 
@@ -37,6 +38,7 @@ class OneDimensionalPhysicsObject:
             self.time = y
 
     def calculate(self, args):
+        # Calculate the specified attribute using diverse physics formulas which are chosen based on what attributes were already defined
         for arg in args:
             if arg == "initX":
                 if self.finalX is not None:
@@ -91,16 +93,14 @@ class OneDimensionalPhysicsObject:
                         elif self.finalX is not None and self.initX is not None:
                             squaredInitVelocity = pow(self.velocity, 2) - 2 * self.acceleration * (self.finalX - self.initX)
                             if squaredInitVelocity > 0:
-                                self.initVelocity = sqrt(squaredInitVelocity)
-                                if self.acceleration < 0 and self.finalX - self.initX < 0:
-                                    self.initVelocity *= -1
+                                initVelocities = [-sqrt(squaredInitVelocity), sqrt(squaredInitVelocity)]
+                                self.initVelocity = initVelocities[min(max(int(input(f"Choose which index of initial velocities to save\n0 = {initVelocities[0]}\n1 = {initVelocities[1]}\n")), 0), 1)]
 
-                        elif self.displacement is not None:
+                    elif self.displacement is not None:
                             squaredInitVelocity = pow(self.velocity, 2) - 2 * self.acceleration * self.displacement
                             if squaredInitVelocity > 0:
-                                self.initVelocity = sqrt(squaredInitVelocity)
-                                if self.acceleration < 0 and self.displacement < 0:
-                                    self.initVelocity *= -1
+                                initVelocities = [-sqrt(squaredInitVelocity), sqrt(squaredInitVelocity)]
+                                self.initVelocity = initVelocities[min(max(int(input(f"Choose which index of initial velocities to save\n0 = {initVelocities[0]}\n1 = {initVelocities[1]}\n")), 0), 1)]
 
                     elif self.time is not None and self.time != 0:
                         if self.finalX is not None and self.initX is not None:
@@ -119,16 +119,14 @@ class OneDimensionalPhysicsObject:
                     elif self.finalX is not None and self.initX is not None:
                         squaredVelocity = pow(self.initVelocity, 2) + 2 * self.acceleration * (self.finalX - self.initX)
                         if squaredVelocity > 0:
-                            self.velocity = sqrt(squaredVelocity)
-                            if self.acceleration < 0 and self.finalX - self.initX < 0:
-                                self.velocity *= -1
+                            velocities = [-sqrt(squaredVelocity), sqrt(squaredVelocity)]
+                            self.velocity = velocities[min(max(int(input(f"Choose which index of velocities to save\n0 = {velocities[0]}\n1 = {velocities[1]}\n")), 0), 1)]
 
                     elif self.displacement is not None:
                         squaredVelocity = pow(self.initVelocity, 2) + 2 * self.acceleration * self.displacement
                         if squaredVelocity > 0:
-                            self.velocity = sqrt(squaredVelocity)
-                            if self.acceleration < 0 and self.displacement < 0:
-                                self.velocity *= -1
+                            velocities = [-sqrt(squaredVelocity), sqrt(squaredVelocity)]
+                            self.velocity = velocities[min(max(int(input(f"Choose which index of velocities to save\n0 = {velocities[0]}\n1 = {velocities[1]}\n")), 0), 1)]
 
                 print(f"Value of velocity was changed to {self.velocity}")
 
@@ -161,14 +159,14 @@ class OneDimensionalPhysicsObject:
                     elif self.finalX is not None and self.initX is not None:
                         squaredVelocity = pow(self.initVelocity, 2) + 2 * self.acceleration * (self.finalX - self.initX)
                         if squaredVelocity > 0:
-                            multipleTimes = [(-self.initVelocity - sqrt(squaredVelocity)) / self.acceleration, (-self.initVelocity + sqrt(squaredVelocity)) / self.acceleration]
-                            self.time = multipleTimes[min(max(int(input(f"Choose which index of times to save\n0 = {multipleTimes[0]}\n1 = {multipleTimes[1]}\n")), 0), 1)]
+                            times = [(-self.initVelocity - sqrt(squaredVelocity)) / self.acceleration, (-self.initVelocity + sqrt(squaredVelocity)) / self.acceleration]
+                            self.time = times[min(max(int(input(f"Choose which index of times to save\n0 = {times[0]}\n1 = {times[1]}\n")), 0), 1)]
 
                     elif self.displacement is not None:
                         squaredVelocity = pow(self.initVelocity, 2) + 2 * self.acceleration * self.displacement
                         if squaredVelocity > 0:
-                            multipleTimes = [(-self.initVelocity - sqrt(squaredVelocity)) / self.acceleration, (-self.initVelocity + sqrt(squaredVelocity)) / self.acceleration]
-                            self.time = multipleTimes[min(max(int(input(f"Choose which index of times to save\n0 = {multipleTimes[0]}\n1 = {multipleTimes[1]}\n")), 0), 1)]
+                            times = [(-self.initVelocity - sqrt(squaredVelocity)) / self.acceleration, (-self.initVelocity + sqrt(squaredVelocity)) / self.acceleration]
+                            self.time = times[min(max(int(input(f"Choose which index of times to save\n0 = {times[0]}\n1 = {times[1]}\n")), 0), 1)]
 
                 elif self.velocity is not None and self.velocity != 0:
                     if self.finalX is not None and self.initX is not None:
@@ -183,4 +181,5 @@ class OneDimensionalPhysicsObject:
 
     @staticmethod
     def formulas():
+        # Return basic physics formulas
         return "finalX = vt + initX\nv = at + initV\nx = at^2 / 2 + initV*t + initX\nv^2 = initV^2 + 2a(finalX - initX)"
