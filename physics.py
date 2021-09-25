@@ -96,11 +96,11 @@ class OneDimensionalPhysicsObject:
                                 initVelocities = [-sqrt(squaredInitVelocity), sqrt(squaredInitVelocity)]
                                 self.initVelocity = initVelocities[min(max(int(input(f"Choose which index of initial velocities to save\n0 = {initVelocities[0]}\n1 = {initVelocities[1]}\n")), 0), 1)]
 
-                    elif self.displacement is not None:
-                            squaredInitVelocity = pow(self.velocity, 2) - 2 * self.acceleration * self.displacement
-                            if squaredInitVelocity > 0:
-                                initVelocities = [-sqrt(squaredInitVelocity), sqrt(squaredInitVelocity)]
-                                self.initVelocity = initVelocities[min(max(int(input(f"Choose which index of initial velocities to save\n0 = {initVelocities[0]}\n1 = {initVelocities[1]}\n")), 0), 1)]
+                        elif self.displacement is not None:
+                                squaredInitVelocity = pow(self.velocity, 2) - 2 * self.acceleration * self.displacement
+                                if squaredInitVelocity > 0:
+                                    initVelocities = [-sqrt(squaredInitVelocity), sqrt(squaredInitVelocity)]
+                                    self.initVelocity = initVelocities[min(max(int(input(f"Choose which index of initial velocities to save\n0 = {initVelocities[0]}\n1 = {initVelocities[1]}\n")), 0), 1)]
 
                     elif self.time is not None and self.time != 0:
                         if self.finalX is not None and self.initX is not None:
@@ -127,6 +127,13 @@ class OneDimensionalPhysicsObject:
                         if squaredVelocity > 0:
                             velocities = [-sqrt(squaredVelocity), sqrt(squaredVelocity)]
                             self.velocity = velocities[min(max(int(input(f"Choose which index of velocities to save\n0 = {velocities[0]}\n1 = {velocities[1]}\n")), 0), 1)]
+
+                elif self.time is not None:
+                    if self.finalX is not None and self.initX is not None:
+                        self.velocity = (self.finalX - self.initX) / self.time
+
+                    elif self.displacement is not None:
+                        self.velocity = self.displacement / self.time
 
                 print(f"Value of velocity was changed to {self.velocity}")
 
