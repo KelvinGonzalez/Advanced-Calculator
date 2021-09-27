@@ -114,7 +114,13 @@ while True:
                     for assignment in assignments:
                         attribute = assignment[:assignment.index('=') - 1]
                         value = assignment[assignment.index('=') + 2:]
-                        obj.modify(attribute, float(value))
+
+                        for key in variables.keys():
+                            value = value.replace(key, variables[key])
+
+                        value = float(eval(value))
+
+                        obj.modify(attribute, value)
 
                         print(f"Object {variable} had its attribute {attribute} modified to {value}")
 
