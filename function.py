@@ -134,6 +134,15 @@ class Function:
 
         return total
 
+    def iterate(self, list):
+        # Return a list of results using the provided list's elements as parameters
+        result = []
+
+        for x in list:
+            result.append(self(x))
+
+        return result
+
     @staticmethod
     def API():
-        return "Function API:\nFunction + Function\nFunction - Function\nFunction * Function\nFunction / Function\nFunction.composite(Function)\nstaticSlope(x1, y1, x2, y2)\nFunction.slope(x)\nFunction.slopeFunction(x)\nFunction.integralLeft(a, b, n)\nFunction.integralRight(a, b, n)\nFunction.integralMidpoint(a, b, n)\nFunction.integralTrapezoid(a, b, n)\nFunction.integralSimpson(a, b, n)\nFunction.integralAll(a, b, n)\nFunction.series0(n)\nFunction.series1(n)"
+        return "Function API:\nFunction + Function\nFunction - Function\nFunction * Function\nFunction / Function\nFunction.composite(Function)\nstaticSlope(x1, y1, x2, y2)\nFunction.slope(x)\nFunction.slopeFunction(x)\nFunction.integralLeft(a, b, n)\nFunction.integralRight(a, b, n)\nFunction.integralMidpoint(a, b, n)\nFunction.integralTrapezoid(a, b, n)\nFunction.integralSimpson(a, b, n)\nFunction.integralAll(a, b, n)\nFunction.series0(n)\nFunction.series1(n)\nFunction.iterate(list)"
