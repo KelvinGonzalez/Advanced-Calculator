@@ -7,15 +7,8 @@ class Function:
     def __init__(self, funct):
         self.funct = funct
 
-    def __call__(self, *args):
+    def __call__(self, *x):
         # Evaluate the function on the given parameters
-        x = None
-
-        if len(args) == 1:
-            x = args[0]
-        elif len(args) > 1:
-            x = args
-
         return eval(self.funct)
 
     def __str__(self):

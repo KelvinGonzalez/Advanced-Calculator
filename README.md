@@ -11,8 +11,8 @@ var:
 -Write variable name, an equal sign, and the value to assign. Ex: "var x1 = 1"
 
 funct:
--Write function name, an equal sign, and the definition to assign. Ex: "funct f1 = x + 1"
--Functions may also support additional parameters. Ex: "function f2 = x[0] + 2 * x[1]"
+-Write function name, an equal sign, and the definition to assign. Ex: "funct f1(x) = x + 1"
+-Functions may also support additional parameters. Ex: "function f2(x1, x2) = x1 + 2 * x2"
 
 physics:
   object:

@@ -42,29 +42,29 @@ class OneDimensionalPhysicsObject:
         for arg in args:
             if arg == "initX":
                 if self.finalX is not None:
-                    if self.acceleration is not None and self.initVelocity is not None:
+                    if self.displacement is not None:
+                        self.initX = self.finalX - self.displacement
+
+                    elif self.acceleration is not None and self.initVelocity is not None:
                         if self.time is not None:
                             self.initX = self.finalX - self.acceleration * pow(self.time, 2) / 2 + self.initVelocity * self.time
 
                         elif self.velocity and self.acceleration != 0:
                             self.initX = self.finalX - (pow(self.velocity, 2) - pow(self.initVelocity, 2)) / (2 * self.acceleration)
 
-                    elif self.velocity is not None and self.time is not None:
-                        self.initX = self.finalX - self.velocity * self.time
-
                 print(f"Value of initX was changed to {self.initX}")
 
             if arg == "finalX":
                 if self.initX is not None:
-                    if self.acceleration is not None and self.initVelocity is not None:
+                    if self.displacement is not None:
+                        self.finalX = self.displacement + self.initX
+
+                    elif self.acceleration is not None and self.initVelocity is not None:
                         if self.time is not None:
                             self.finalX = self.acceleration * pow(self.time, 2) / 2 + self.initVelocity * self.time + self.initX
 
                         elif self.velocity is not None and self.acceleration != 0:
                             self.finalX = (pow(self.velocity, 2) - pow(self.initVelocity, 2)) / (2 * self.acceleration) + self.initX
-
-                    elif self.velocity is not None and self.time is not None:
-                        self.finalX = self.velocity * self.time + self.initX
 
                 print(f"Value of finalX was changed to {self.finalX}")
 
@@ -78,9 +78,6 @@ class OneDimensionalPhysicsObject:
 
                     elif self.velocity is not None and self.acceleration != 0:
                         self.displacement = (pow(self.velocity, 2) - pow(self.initVelocity, 2)) / (2 * self.acceleration)
-
-                elif self.velocity is not None and self.time is not None:
-                    self.displacement = self.velocity * self.time
 
                 print(f"Value of displacement was changed to {self.displacement}")
 
@@ -128,13 +125,6 @@ class OneDimensionalPhysicsObject:
                             velocities = [-sqrt(squaredVelocity), sqrt(squaredVelocity)]
                             self.velocity = velocities[min(max(int(input(f"Choose which index of velocities to save\n0 = {velocities[0]}\n1 = {velocities[1]}\n")), 0), 1)]
 
-                elif self.time is not None:
-                    if self.finalX is not None and self.initX is not None:
-                        self.velocity = (self.finalX - self.initX) / self.time
-
-                    elif self.displacement is not None:
-                        self.velocity = self.displacement / self.time
-
                 print(f"Value of velocity was changed to {self.velocity}")
 
             if arg == "acceleration":
@@ -175,13 +165,6 @@ class OneDimensionalPhysicsObject:
                             times = [(-self.initVelocity - sqrt(squaredVelocity)) / self.acceleration, (-self.initVelocity + sqrt(squaredVelocity)) / self.acceleration]
                             self.time = times[min(max(int(input(f"Choose which index of times to save\n0 = {times[0]}\n1 = {times[1]}\n")), 0), 1)]
 
-                elif self.velocity is not None and self.velocity != 0:
-                    if self.finalX is not None and self.initX is not None:
-                        self.time = (self.finalX - self.initX) / self.velocity
-
-                    elif self.displacement is not None:
-                        self.time = self.displacement / self.velocity
-
                 print(f"Value of time was changed to {self.time}")
 
         return True
@@ -189,4 +172,4 @@ class OneDimensionalPhysicsObject:
     @staticmethod
     def formulas():
         # Return basic physics formulas
-        return "finalX = vt + initX\nv = at + initV\nx = at^2 / 2 + initV*t + initX\nv^2 = initV^2 + 2a(finalX - initX)"
+        return "v = at + initV\nx = at^2 / 2 + initV*t + initX\nv^2 = initV^2 + 2a(finalX - initX)"

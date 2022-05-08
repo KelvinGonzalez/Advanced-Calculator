@@ -20,7 +20,7 @@ print(
     "Help:\n"
     "[expression]\n"
     "var [x] = [y]\n"
-    "funct [f] = [y]\n"
+    "funct [f]([x]) = [y]\n"
     "physics [task] [variable]: [attribute_1] = [value_1], [attribute_n] = [value_n]\n"
     "delete [variable]\n"
     "save\n"
@@ -35,10 +35,10 @@ while True:
         # Create and store a variable with the name and value that the user provides
         expression = answer[4:]
 
-        if " = " in expression:
+        if "=" in expression:
             try:
-                variable = expression[:expression.index('=') - 1]
-                value = expression[expression.index('=') + 2:]
+                variable = expression[:expression.index('=')].strip()
+                value = expression[expression.index('=') + 1:].strip()
 
                 for key in variables.keys():
                     value = value.replace(key, variables[key])
@@ -64,10 +64,14 @@ while True:
         # Create and store a function with the name and definition that the user provides
         expression = answer[6:]
 
-        if " = " in expression:
+        if "=" in expression and "(" in expression and ")" in expression:
             try:
-                variable = expression[:expression.index('=') - 1]
-                definition = expression[expression.index('=') + 2:]
+                variable = expression[:expression.index('(')].strip()
+                parameters = expression[expression.index('(') + 1:expression.index(')')].split(',')
+                definition = expression[expression.index('=') + 1:].strip()
+
+                for i in range(len(parameters)):
+                    definition = definition.replace(parameters[i].strip(), f"x[{i}]")
 
                 for key in variables.keys():
                     definition = definition.replace(key, variables[key])
@@ -105,15 +109,15 @@ while True:
             # Modify the attributes of the object specified by the user
             expression = physicsExpression[7:]
 
-            if ": " in expression and " = " in expression:
+            if ":" in expression and "=" in expression:
                 try:
-                    variable = expression[:expression.index(':')]
-                    assignments = expression[expression.index(':') + 2:].split(", ")
+                    variable = expression[:expression.index(':')].strip()
+                    assignments = expression[expression.index(':') + 1:].split(",")
                     obj = eval(variables[variable])
 
                     for assignment in assignments:
-                        attribute = assignment[:assignment.index('=') - 1]
-                        value = assignment[assignment.index('=') + 2:]
+                        attribute = assignment[:assignment.index('=')].strip()
+                        value = assignment[assignment.index('=') + 1:].strip()
 
                         for key in variables.keys():
                             value = value.replace(key, variables[key])
@@ -136,10 +140,12 @@ while True:
             # Calculate the specified attribute for the object specified by the user
             expression = physicsExpression[10:]
 
-            if ": " in expression:
+            if ":" in expression:
                 try:
-                    variable = expression[:expression.index(':')]
-                    attributes = expression[expression.index(':') + 2:].split(", ")
+                    variable = expression[:expression.index(':')].strip()
+                    attributes = expression[expression.index(':') + 1:].split(",")
+                    for i in range(len(attributes)):
+                        attributes[i] = attributes[i].strip()
 
                     obj = eval(variables[variable])
                     obj.calculate(attributes)
@@ -153,13 +159,13 @@ while True:
 
         elif physicsExpression[:6] == "clear ":
             # Clear specific or all attribute data for a specified object
-            if ": " in physicsExpression:
-                variable = physicsExpression[6:physicsExpression.index(':')]
-                attributes = physicsExpression[physicsExpression.index(':') + 2:].split(", ")
+            if ":" in physicsExpression:
+                variable = physicsExpression[6:physicsExpression.index(':')].strip()
+                attributes = physicsExpression[physicsExpression.index(':') + 1:].split(",")
                 obj = eval(variables[variable])
 
                 for attribute in attributes:
-                    obj.modify(attribute, None)
+                    obj.modify(attribute.strip(), None)
 
                 variables[variable] = str(obj)
 
@@ -168,16 +174,6 @@ while True:
                 variables[variable] = str(OneDimensionalPhysicsObject())
 
             print(f"Object {variable} has been cleared")
-
-    elif answer[:7] == "delete ":
-        # Delete a specified stored variable
-        variable = answer[7:]
-
-        if variables.get(variable):
-            variables.pop(variable)
-            print(f"Variable {variable} has been deleted")
-        else:
-            print(f"Variable {variable} not found")
 
     elif answer == "variables":
         # View all variables stored
@@ -200,12 +196,31 @@ while True:
 
         print("Data has been saved")
 
-    elif answer == "clear variables":
-        # Clear all variables stored
+    elif answer == "delete variables":
+        # Delete all variables stored
         variables.clear()
         print("All variable data has been cleared")
 
-    elif answer.replace(" ", "") == "":
+    elif answer[:24] == "delete variables except ":
+        vars = answer[24:].split(",")
+        for i in range(len(vars)):
+            vars[i] = vars[i].strip()
+        for key in list(variables.keys()):
+            if key not in vars:
+                variables.pop(key)
+        print("All variables except specified have been deleted")
+
+    elif answer[:7] == "delete ":
+        # Delete a specified stored variable
+        vars = answer[7:].split(",")
+
+        for var in vars:
+            if variables.get(var.strip()):
+                variables.pop(var.strip())
+
+        print("Found variables have been deleted")
+
+    elif answer.strip() == "":
         # Allow the user to enter new lines freely
         continue
 
